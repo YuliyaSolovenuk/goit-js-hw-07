@@ -1,8 +1,8 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-const galleryList = document.querySelector('.gallery')
-console.log(galleryList)
+const galleryListEl = document.querySelector('.gallery')
+
 
 const galleryElements = galleryItems.map(({preview, original, description}) => 
 `<li class="gallery__item">
@@ -17,20 +17,37 @@ const galleryElements = galleryItems.map(({preview, original, description}) =>
       </li>`
 ).join('');
 
-galleryList.insertAdjacentHTML('afterbegin', galleryElements);
-console.log(galleryList);
+galleryListEl.insertAdjacentHTML('afterbegin', galleryElements);
 
-galleryList.addEventListener('click', onClickGalleryList)
+
+
+galleryListEl.addEventListener('click', onClickGalleryList)
+
+
 
 function onClickGalleryList(event){
-    let imageLink;
-    if(event.target.nameNode === "LI"){
+  
+  event.preventDefault()
 
-        imageLink = event.target.li.getAttribute('href')
-        console.log(imageLink)
+  if(event.target.nodeName !== "IMG"){
+   return
+  }
+
+  const imageLink = event.target.dataset.source
+  
+  const instance = basicLightbox.create(
+    `<img src="${imageLink}" width="800" height="600">`
+  )
+  instance.show()
+
+  galleryListEl.addEventListener('keydown', (e) => {
+    if(e.code !== 'Escape'){
+      return
     }
+    instance.close()
+  })
+
 }
 
 console.log(galleryItems);
-
 
